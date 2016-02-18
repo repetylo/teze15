@@ -1,0 +1,44 @@
+{
+"type": "FeatureCollection",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+                                                                                
+"features": [
+{ "type": "Feature", "properties": { "latitude": 49.841746, "longitude": 24.031047, "time": 1, "id": "route1", "name":"Lviv" }, "geometry": { "type": "Point", "coordinates": [ 24.031047, 49.841746 ] } },
+
+{ "type": "Feature", "properties": { "latitude": 48.414162, "longitude": 22.171268, "time": 2, "id": "route1", "name":"Chop" }, "geometry": { "type": "Point", "coordinates": [ 22.171268, 48.414162 ] } },
+
+{ "type": "Feature", "properties": { "latitude": 47.5031, "longitude": 19.0969, "time": 3, "id": "route1", "name":"Budapest" }, "geometry": { "type": "Point", "coordinates": [ 19.0969, 47.5031 ] } },
+
+{ "type": "Feature", "properties": { "latitude": 47.6838, "longitude": 17.6357, "time": 4, "id": "route1", "name":"Győr" }, "geometry": { "type": "Point", "coordinates": [ 17.6357, 47.6838 ] } },
+
+
+{ "type": "Feature", "properties": { "latitude": 47.7972, "longitude": 13.0477, "time": 5, "id": "route1", "name":"Salzburg" }, "geometry": { "type": "Point", "coordinates": [ 13.0477, 47.7972 ] } },
+
+{ "type": "Feature", "properties": { "latitude": 47.3828, "longitude": 8.5307, "time": 6, "id": "route1", "name":"Zürich" }, "geometry": { "type": "Point", "coordinates": [ 8.5307, 47.3828 ] } },
+
+
+{ "type": "Feature", "properties": { "latitude": 43.1847, "longitude": 3.0036, "time": 7, "id": "route1", "name":"Narbonne" }, "geometry": { "type": "Point", "coordinates": [ 3.0036, 43.1847 ] } },
+
+{ "type": "Feature", "properties": { "latitude": 41.3888, "longitude": 2.159, "time": 8, "id": "route1", "name":"Barcelona" }, "geometry": { "type": "Point", "coordinates": [ 2.159, 41.3888 ] } },
+
+{ "type": "Feature", "properties": { "latitude": 41.026017, "longitude": 0.908432, "time": 9, "id": "route1", "name":"point" }, "geometry": { "type": "Point", "coordinates": [ 0.908432, 41.026017 ] } },
+
+{ "type": "Feature", "properties": { "latitude": 39.4561, "longitude": -0.3546, "time": 10, "id": "route1", "name":"Valencia" }, "geometry": { "type": "Point", "coordinates": [ -0.3546, 39.4561 ] } },
+
+{ "type": "Feature", "properties": { "latitude": 41.026017, "longitude": 0.908432, "time": 11, "id": "route1", "name":"point" }, "geometry": { "type": "Point", "coordinates": [ 0.908432, 41.026017 ] } },
+
+{ "type": "Feature", "properties": { "latitude": 43.1847, "longitude": 3.0036, "time": 12, "id": "route1", "name":"Narbonne" }, "geometry": { "type": "Point", "coordinates": [ 3.0036, 43.1847 ] } },
+
+{ "type": "Feature", "properties": { "latitude": 46.2058, "longitude": 6.1416, "time": 13, "id": "route1", "name":"Genève" }, "geometry": { "type": "Point", "coordinates": [ 6.1416, 46.2058 ] } },
+
+{ "type": "Feature", "properties": { "latitude": 48.2085, "longitude": 16.3721, "time": 14, "id": "route1", "name":"Wien"  }, "geometry": { "type": "Point", "coordinates": [ 16.3721, 48.2085 ] } },
+
+{ "type": "Feature", "properties": { "latitude": 47.6838, "longitude": 17.6357, "time": 15, "id": "route1", "name":"Győr" }, "geometry": { "type": "Point", "coordinates": [ 17.6357, 47.6838 ] } },
+
+{ "type": "Feature", "properties": { "latitude": 47.5031, "longitude": 19.0969, "time": 16, "id": "route1", "name":"Budapest" }, "geometry": { "type": "Point", "coordinates": [ 19.0969, 47.5031 ] } },
+
+{ "type": "Feature", "properties": { "latitude": 48.414162, "longitude": 22.171268, "time": 17, "id": "route1", "name":"Chop" }, "geometry": { "type": "Point", "coordinates": [ 22.171268, 48.414162 ] } },
+
+{ "type": "Feature", "properties": { "latitude": 49.841746, "longitude": 24.031047, "time": 18, "id": "route1", "name":"Lviv" }, "geometry": { "type": "Point", "coordinates": [ 24.031047, 49.841746 ] } }
+]
+}

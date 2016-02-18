@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>Teze15</title>
+	<meta name="author" content="Bohdan Repetylo" />
+	<meta name="description" content="fullPage full-screen navigation and sections control menu." />
+	<meta name="keywords"  content="fullpage,jquery,demo,screen,fullscreen,navigation,control arrows, dots" />
+	<meta name="Resource-type" content="Document" />
+
+	<script src='https://api.mapbox.com/mapbox.js/v2.2.3/mapbox.js'></script>
+	<link href='https://api.mapbox.com/mapbox.js/v2.2.3/mapbox.css' rel='stylesheet' />
+	
+	<script src="http://d3js.org/d3.v3.min.js" type="text/javascript"></script> <!-- Fore First slide map marker movement -->
+	
+	<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,800&subset=latin,cyrillic' rel='stylesheet' type='text/css'>
+
+	<link rel="stylesheet" type="text/css" href="jquery.fullPage.css" />
+	<link rel="stylesheet" type="text/css" href="main.css" />
+
+	<!--[if IE]>
+		<script type="text/javascript">
+			 var console = { log: function() {} };
+		</script>
+	<![endif]-->
+
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="jquery.fullPage.js"></script>
+
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$('#fullpage').fullpage({
+				anchors: ['firstPage', 'Salzburg', 'Zurich', 'Barcelona', 'Valencia', 'Geneve','Wien', 'LastPage'],
+				sectionsColor: ['#C63D0F', '#1BBC9B', '#7E8F7C'],
+				menu: '#menu',
+				navigation: true,
+				navigationPosition: 'right',
+				navigationTooltips: ['First page', 'Salzburg', 'Zurich', 'Barcelona', 'Valencia', 'Geneve','Wien', 'Last page'],
+				slidesNavigation: true,
+				afterLoad: function(anchorLink, index){
+
+					//section 2
+					if(index == 2){
+						//moving the image
+						$('#section1').find('img').delay(500).animate({
+							left: '0%'
+						}, 1500, 'easeOutExpo');
+
+						$('#section1').find('p').first().fadeIn(1800, function(){
+							$('#section1').find('p').last().fadeIn(1800);
+						});;
+
+					}
+
+				}
+			});
+		});
+
+	</script>
+
+	<script>
+	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+	  ga('create', 'UA-9775715-8', 'auto');
+	  ga('send', 'pageview');
+	</script>
+</head>
+<body>
+
+<ul id="menu">
+	<li data-menuanchor="firstPage" class="active"><a href="#firstPage">First slide</a></li>
+	<li data-menuanchor="Salzburg"><a href="#Salzburg">Salzburg</a></li>
+	<li data-menuanchor="Zurich"><a href="#Zurich">Zurich</a></li>
+	<li data-menuanchor="Barcelona"><a href="#Barcelona">Barcelona</a></li>
+	<li data-menuanchor="Valencia"><a href="#Valencia">Valencia</a></li>
+	<li data-menuanchor="Geneve"><a href="#Geneve">Geneve</a></li>
+	<li data-menuanchor="Wien"><a href="#Wien">Wien</a></li>
+	<li data-menuanchor="LastPage"><a href="#LastPage">Last page</a></li>
+</ul>
+
+<div id="fullpage">
+	<div class="section " id="section0">
+		<div class="intro">
+			
+		</div>
+		<div id='map'></div>
+		<script>
+		var mapboxTiles = L.tileLayer('https://api.mapbox.com/v4/mapbox.outdoors/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoicmVwZXR5bG8iLCJhIjoiY2loNHM5ZDltMDB3Z3Zxa3JzNW43dnZoOSJ9.DxWT1eAM9OqkYrb517aM0w');
+    var map = L.map('map', {zoomControl: false})
+        .addLayer(mapboxTiles)
+				.setView([45.1975, 12.238], 5);
+		map.dragging.disable();
+		map.touchZoom.disable();
+		map.doubleClickZoom.disable();
+		map.scrollWheelZoom.disable();
+		map.keyboard.disable();
+		if (map.tap) map.tap.disable();
+		
+		//marker path animation based on http://zevross.com/blog/2014/09/30/use-the-amazing-d3-library-to-animate-a-path-on-a-leaflet-map/ 
+    var svg = d3.select(map.getPanes().overlayPane).append("svg");
+
+    var g = svg.append("g").attr("class", "leaflet-zoom-hide");
+
+    d3.json("points.geojson", function(collection) {
+
+        var featuresdata = collection.features.filter(function(d) {
+            return d.properties.id == "route1"
+        })
+
+        var transform = d3.geo.transform({
+            point: projectPoint
+        });
+ 
+        var d3path = d3.geo.path().projection(transform);
+
+        var toLine = d3.svg.line()
+            .interpolate("linear")
+            .x(function(d) {
+                return applyLatLngToLayer(d).x
+            })
+            .y(function(d) {
+                return applyLatLngToLayer(d).y
+            });
+
+        var ptFeatures = g.selectAll("circle")
+            .data(featuresdata)
+            .enter()
+            .append("circle")
+            .attr("r", 3)
+            .attr("class", "waypoints");
+
+        var linePath = g.selectAll(".lineConnect")
+            .data([featuresdata])
+            .enter()
+            .append("path")
+            .attr("class", "lineConnect");
+
+        var marker = g.append("circle")
+            .attr("r", 10)
+            .attr("id", "marker")
+            .attr("class", "travelMarker");
+
+        var originANDdestination = [featuresdata[0], featuresdata[4], featuresdata[5], featuresdata[7], featuresdata[9], featuresdata[12], featuresdata[13]]
+        var begend = g.selectAll(".drinks")
+            .data(originANDdestination)
+            .enter()
+            .append("circle", ".drinks")
+            .attr("r", 9)
+            .style("fill", "#f5c272")
+            .style("opacity", "1")
+						.style("stroke", "#d3aa1a")
+						.style("stroke-width", "4px");
+
+        var text = g.selectAll("text")
+            .data(originANDdestination)
+            .enter()
+            .append("text")
+            .text(function(d) {
+                return d.properties.name
+            })
+            .attr("class", "locnames")
+            .attr("y", function(d) {
+                return -10
+            })
+
+        map.on("viewreset", reset);
+        reset();
+        transition();
+        function reset() {
+            var bounds = d3path.bounds(collection),
+                topLeft = bounds[0],
+                bottomRight = bounds[1];
+
+            text.attr("transform",
+                function(d) {
+                    return "translate(" +
+                        applyLatLngToLayer(d).x + "," +
+                        applyLatLngToLayer(d).y + ")";
+                });
+
+            begend.attr("transform",
+                function(d) {
+                    return "translate(" +
+                        applyLatLngToLayer(d).x + "," +
+                        applyLatLngToLayer(d).y + ")";
+                });
+            ptFeatures.attr("transform",
+                function(d) {
+                    return "translate(" +
+                        applyLatLngToLayer(d).x + "," +
+                        applyLatLngToLayer(d).y + ")";
+                });
+
+            marker.attr("transform",
+                function() {
+                    var y = featuresdata[0].geometry.coordinates[1]
+                    var x = featuresdata[0].geometry.coordinates[0]
+                    return "translate(" +
+                        map.latLngToLayerPoint(new L.LatLng(y, x)).x + "," +
+                        map.latLngToLayerPoint(new L.LatLng(y, x)).y + ")";
+                });
+            svg.attr("width", bottomRight[0] - topLeft[0] + 120)
+                .attr("height", bottomRight[1] - topLeft[1] + 120)
+                .style("left", topLeft[0] - 50 + "px")
+                .style("top", topLeft[1] - 50 + "px");
+            linePath.attr("d", toLine)
+            g.attr("transform", "translate(" + (-topLeft[0] + 50) + "," + (-topLeft[1] + 50) + ")");
+        } 
+        function transition() {
+            linePath.transition()
+                .duration(19000)
+								.ease("linear")
+                .attrTween("stroke-dasharray", tweenDash)
+                $(window).on('hashchange', function() {
+										if (document.location.hash == "#firstPage")
+                    d3.select(this).call(transition);// infinite loop
+                }); 
+        } 
+        function tweenDash() {
+            return function(t) {
+                var l = linePath.node().getTotalLength(); 
+
+                interpolate = d3.interpolateString("0," + l, l + "," + l);
+                var marker = d3.select("#marker");
+
+                var p = linePath.node().getPointAtLength(t * l);
+                marker.attr("transform", "translate(" + p.x + "," + p.y + ")"); //move marker
+                return interpolate(t);
+            }
+        } 
+        function projectPoint(x, y) {
+            var point = map.latLngToLayerPoint(new L.LatLng(y, x));
+            this.stream.point(point.x, point.y);
+        } 
+    });
+
+    function applyLatLngToLayer(d) {
+        var y = d.geometry.coordinates[1]
+        var x = d.geometry.coordinates[0]
+        return map.latLngToLayerPoint(new L.LatLng(y, x))
+    }
+    </script>
+		
+		
+		
+	</div>
+	
+	<div class="section" id="section1">
+	    <div class="slide" id="slide1">
+			<div class="intro">
+				<h1>Salzburg</h1>
+				<p>
+					December 24
+				</p>
+			</div>
+		</div>
+
+	  <div class="slide" id="slide2">
+			<h1>Salzburg map</h1>
+			<iframe width='100%' height='500px' frameBorder='0' src='https://a.tiles.mapbox.com/v4/repetylo.o7lg0e63/attribution,zoompan,zoomwheel,geocoder.html?access_token=pk.eyJ1IjoicmVwZXR5bG8iLCJhIjoiY2loNHM5ZDltMDB3Z3Zxa3JzNW43dnZoOSJ9.DxWT1eAM9OqkYrb517aM0w'></iframe>
+
+		</div>
+	</div>
+	
+		<div class="section" id="section2">
+	    <div class="slide" id="slide1">
+			<div class="intro">
+				<h1>Zurich</h1>
+				<p>
+					December 25
+				</p>
+			</div>
+			</div>
+
+			<div class="slide" id="slide2">
+				<h1>Zurich map</h1>
+				<iframe width='100%' height='500px' frameBorder='0' src='https://a.tiles.mapbox.com/v4/repetylo.o7lfel57/attribution,zoompan,zoomwheel,geocoder.html?access_token=pk.eyJ1IjoicmVwZXR5bG8iLCJhIjoiY2loNHM5ZDltMDB3Z3Zxa3JzNW43dnZoOSJ9.DxWT1eAM9OqkYrb517aM0w'></iframe>
+
+			</div>
+		</div>
+		
+		<div class="section" id="section3">
+	    <div class="slide" id="slide1">
+			<div class="intro">
+				<h1>Barcelona</h1>
+				<p>
+					December 26-27
+				</p>
+			</div>
+			</div>
+
+			<div class="slide" id="slide2">
+				<h1>Barcelona map</h1>
+				<iframe width='100%' height='500px' frameBorder='0' src='https://a.tiles.mapbox.com/v4/repetylo.o7lg9pgm/attribution,zoompan,zoomwheel,geocoder.html?access_token=pk.eyJ1IjoicmVwZXR5bG8iLCJhIjoiY2loNHM5ZDltMDB3Z3Zxa3JzNW43dnZoOSJ9.DxWT1eAM9OqkYrb517aM0w'></iframe>
+
+			</div>
+		</div>
+		
+		<div class="section" id="section4">
+	    <div class="slide" id="slide1">
+			<div class="intro">
+				<h1>Valencia</h1>
+				<p>
+					December 28 - January 1				
+				</p>
+			</div>
+			</div>
+
+			<div class="slide" id="slide2">
+				<h1>Valencia map</h1>
+				<iframe width='100%' height='500px' frameBorder='0' src='https://a.tiles.mapbox.com/v4/repetylo.o7lgfij1/attribution,zoompan,zoomwheel,geocoder.html?access_token=pk.eyJ1IjoicmVwZXR5bG8iLCJhIjoiY2loNHM5ZDltMDB3Z3Zxa3JzNW43dnZoOSJ9.DxWT1eAM9OqkYrb517aM0w'></iframe>
+			</div>
+		</div>
+		
+		<div class="section" id="section5">
+	    <div class="slide" id="slide1">
+			<div class="intro">
+				<h1>Geneve</h1>
+				<p>
+					January 2
+				</p>
+			</div>
+			</div>
+
+			<div class="slide" id="slide2">
+				<h1>Geneve map</h1>
+				<iframe width='100%' height='500px' frameBorder='0' src='https://a.tiles.mapbox.com/v4/repetylo.o7lgloa5/attribution,zoompan,zoomwheel,geocoder.html?access_token=pk.eyJ1IjoicmVwZXR5bG8iLCJhIjoiY2loNHM5ZDltMDB3Z3Zxa3JzNW43dnZoOSJ9.DxWT1eAM9OqkYrb517aM0w'></iframe>
+			</div>
+		</div>
+		
+		<div class="section" id="section6">
+	    <div class="slide" id="slide1">
+			<div class="intro">
+				<h1>Wien</h1>
+				<p>
+					January 3
+				</p>
+			</div>
+			</div>
+
+			<div class="slide" id="slide2">
+				<h1>Wien map</h1>
+				<iframe width='100%' height='500px' frameBorder='0' src='https://a.tiles.mapbox.com/v4/repetylo.o6mjdmfe/attribution,zoompan,zoomwheel,geocoder.html?access_token=pk.eyJ1IjoicmVwZXR5bG8iLCJhIjoiY2loNHM5ZDltMDB3Z3Zxa3JzNW43dnZoOSJ9.DxWT1eAM9OqkYrb517aM0w'></iframe>
+
+			</div>
+		</div>
+	
+	<div class="section" id="section7">
+		<div class="intro">
+			<h1>Enjoy it</h1>
+		</div>
+	</div>
+</div>
+
+
+</body>
+</html>
